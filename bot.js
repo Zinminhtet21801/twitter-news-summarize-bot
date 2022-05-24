@@ -41,11 +41,11 @@ const rules = [
   },
 ];
 
-const summarizeArticle = async (url) => {
+const summarizeArticle = async (url, sentenceLimit) => {
   const formData = {
     key: config.meaningCloudLicenseKey,
     url: url,
-    sentences: "2",
+    sentences: sentenceLimit ? sentenceLimit : "2",
   };
 
   const res = await needle(
@@ -53,6 +53,9 @@ const summarizeArticle = async (url) => {
     "https://api.meaningcloud.com/summarization-1.0",
     formData
   );
+  if (res.body.summary.length > 280) {
+    return summarizeArticle(url, 1);
+  }
   return res.body.summary;
 };
 
@@ -151,13 +154,13 @@ async function streamConnect(retryAttempt) {
         if (ogTweet.entities.urls && ogTweet.entities.urls.length > 0) {
           let articleLink = ogTweet.entities.urls[0].expanded_url;
           let articleSummary = await summarizeArticle(articleLink);
-          console.log('Summary Done');
+          console.log("Summary Done");
           if (articleSummary) {
             // reply user with article summary
-            const response = await rwClient.v1.reply(
-              `$@${senderName}\n${articleSummary}`,
-              senderTweetId
-            ).then(res=> res).catch(err=> err);
+            const response = await rwClient.v1
+              .reply(`$@${senderName}\n${articleSummary}`, senderTweetId)
+              .then((res) => res)
+              .catch((err) => err);
             console.log(response, `response`);
           }
         }
