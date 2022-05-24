@@ -45,17 +45,21 @@ const rules = [
 ];
 
 const summarizeArticle = async (url) => {
+  console.log(url);
   const formData = {
     key: config.meaningCloudLicenseKey,
     url: url,
     sentences: "3",
   };
 
+  console.log({formData});
+
   const res = await needle(
     "post",
     "https://api.meaningcloud.com/summarization-1.0",
     formData
   );
+  console.log(res.body);
   return res.body.summary;
 };
 
@@ -157,13 +161,7 @@ async function streamConnect(retryAttempt) {
           console.log(articleSummary, "articleSummary");
           if (articleSummary) {
             // reply user
-            console.log(
-              "ok dud",
-              "articleSummary again",
-              { senderName },
-              { articleSummary },
-              { senderTweetId }
-            );
+
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
               senderTweetId
