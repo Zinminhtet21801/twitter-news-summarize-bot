@@ -157,7 +157,8 @@ async function streamConnect(retryAttempt) {
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
               senderTweetId
-            )
+            ).then(res=> res).catch(err=> err);
+            console.log(response, `response`);
           }
         }
       } catch (e) {
