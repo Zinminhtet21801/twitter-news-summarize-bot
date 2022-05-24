@@ -160,9 +160,9 @@ async function streamConnect(retryAttempt) {
             console.log(
               "ok dud",
               "articleSummary again",
-              senderName,
-              articleSummary,
-              senderTweetId
+              { senderName },
+              { articleSummary },
+              { senderTweetId }
             );
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
