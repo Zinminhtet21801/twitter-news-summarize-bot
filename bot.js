@@ -1,4 +1,7 @@
 require("dotenv").config();
+const express = require("express");
+const app = express();
+const PORT = process.env.PORT || 5000;
 const needle = require("needle");
 const token = process.env.BEARER_TOKEN;
 const { TwitterApi } = require("twitter-api-v2");
@@ -52,7 +55,7 @@ const summarizeArticle = async (url) => {
     "post",
     "https://api.meaningcloud.com/summarization-1.0",
     formData
-  )
+  );
   return res.body.summary;
 };
 
@@ -154,7 +157,7 @@ async function streamConnect(retryAttempt) {
           console.log(articleSummary, "articleSummary");
           if (articleSummary) {
             // reply user
-            console.log('ok dud', "articleSummary again");
+            console.log("ok dud", "articleSummary again");
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
               senderTweetId
@@ -183,7 +186,7 @@ async function streamConnect(retryAttempt) {
         // To avoid rate limits, this logic implements exponential backoff, so the wait time
         // will increase if the client cannot reconnect to the stream.
         setTimeout(() => {
-          console.warn("A connection error occurred. Reconnecting...",error);
+          console.warn("A connection error occurred. Reconnecting...", error);
           streamConnect(++retryAttempt);
         }, 2 ** retryAttempt);
       }
@@ -213,3 +216,5 @@ async function streamConnect(retryAttempt) {
   // Listen to the stream.
   streamConnect(0);
 })();
+
+app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
