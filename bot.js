@@ -157,7 +157,13 @@ async function streamConnect(retryAttempt) {
           console.log(articleSummary, "articleSummary");
           if (articleSummary) {
             // reply user
-            console.log("ok dud", "articleSummary again");
+            console.log(
+              "ok dud",
+              "articleSummary again",
+              senderName,
+              articleSummary,
+              senderTweetId
+            );
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
               senderTweetId
