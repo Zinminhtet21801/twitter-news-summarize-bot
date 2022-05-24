@@ -1,7 +1,4 @@
 require("dotenv").config();
-const express = require("express");
-const app = express();
-const PORT = process.env.PORT || 5000;
 const needle = require("needle");
 const token = process.env.BEARER_TOKEN;
 const { TwitterApi } = require("twitter-api-v2");
@@ -45,21 +42,17 @@ const rules = [
 ];
 
 const summarizeArticle = async (url) => {
-  console.log(url);
   const formData = {
     key: config.meaningCloudLicenseKey,
     url: url,
-    sentences: "3",
+    sentences: "2",
   };
-
-  console.log({formData});
 
   const res = await needle(
     "post",
     "https://api.meaningcloud.com/summarization-1.0",
     formData
   );
-  console.log(res.body);
   return res.body.summary;
 };
 
@@ -158,15 +151,13 @@ async function streamConnect(retryAttempt) {
         if (ogTweet.entities.urls && ogTweet.entities.urls.length > 0) {
           let articleLink = ogTweet.entities.urls[0].expanded_url;
           let articleSummary = await summarizeArticle(articleLink);
-          console.log(articleSummary, "articleSummary");
+          console.log('Summary Done');
           if (articleSummary) {
-            // reply user
-
+            // reply user with article summary
             const response = await rwClient.v1.reply(
               `$@${senderName}\n${articleSummary}`,
               senderTweetId
-            );
-            console.log(response, "response");
+            )
           }
         }
       } catch (e) {
@@ -220,5 +211,3 @@ async function streamConnect(retryAttempt) {
   // Listen to the stream.
   streamConnect(0);
 })();
-
-app.listen(PORT, () => console.log(`Example app listening on port ${PORT}!`));
