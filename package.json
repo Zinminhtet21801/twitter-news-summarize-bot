@@ -1,0 +1,18 @@
+{
+  "name": "twitter-news-summarize-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "bot.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node bot.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.1",
+    "needle": "^3.1.0",
+    "twitter-api-v2": "^1.12.2"
+  }
+}
